@@ -43,6 +43,20 @@ async function run() {
 
 
     // booking related
+
+    // read
+
+    app.get('/bookings', async(req,res)=>{
+        const cursor = bookingCollection.find()
+        const result = await cursor.toArray()
+        res.send(result)
+    })
+
+
+
+
+
+
     // create
 
     app.post('/bookings', async(req,res)=>{
