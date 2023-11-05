@@ -30,6 +30,7 @@ async function run() {
     await client.connect();
 
     const roomCollection = client.db("roomDB").collection("rooms")
+    const bookingCollection = client.db("roomDB").collection("bookings")
 
     // read
     // room
@@ -38,6 +39,17 @@ async function run() {
         const cursor = roomCollection.find()
         const result = await cursor.toArray()
         res.send(result)
+    })
+
+
+    // booking related
+    // create
+
+    app.post('/bookings', async(req,res)=>{
+        const newBooking = req.body;
+        const result = await bookingCollection.insertOne(newBooking)
+        res.send(result)
+        
     })
 
 
