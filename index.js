@@ -104,6 +104,18 @@ async function run() {
 
     // for review
 
+    // read
+
+    app.get('/review', async(req,res)=>{
+      const cursor = reviewCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+
+
+
+    // create
     app.post('/review', async(req,res)=>{
       const newReview = req.body;
       const result = await reviewCollection.insertOne(newReview)
