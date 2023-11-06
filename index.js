@@ -101,6 +101,15 @@ async function run() {
 
     })
 
+    // delete
+
+    app.delete('/bookings/:id', async(req,res)=>{
+      const id  = req.params.id;
+        const query ={_id: new ObjectId(id)}
+        const result = await bookingCollection.deleteOne(query)
+        res.send(result)
+    })
+
 
     // for review
 
@@ -121,6 +130,8 @@ async function run() {
       const result = await reviewCollection.insertOne(newReview)
       res.send(result)
     })
+
+    
 
 
 
