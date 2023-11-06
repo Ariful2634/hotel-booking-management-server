@@ -35,38 +35,55 @@ async function run() {
     // read
     // room
 
-    app.get('/rooms', async(req,res)=>{
-        const cursor = roomCollection.find()
-        const result = await cursor.toArray()
-        res.send(result)
+    app.get('/rooms', async (req, res) => {
+      const cursor = roomCollection.find()
+      const result = await cursor.toArray()
+      res.send(result)
     })
 
 
     // booking related
 
     // find
-    
-    app.get('/bookings/:id', async(req,res)=>{
+
+    app.get('/bookings/:id', async (req, res) => {
 
       const id = req.params.id;
-      const query = {_id: new ObjectId(id) }
+      const query = { _id: new ObjectId(id) }
       const result = await bookingCollection.findOne(query)
       res.send(result)
 
     })
 
+    // update
+
+    app.put('/update/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true };
+      const updateBooking = req.body;
+      const update = {
+        $set: {
+          date: updateBooking.date,
+
+        }
+      }
+      const result = await bookingCollection.updateOne(filter,update,options)
+      res.send(result)
+    })
+
 
     // read
 
-    app.get('/bookings', async(req,res)=>{
+    app.get('/bookings', async (req, res) => {
 
-        let query = {}
-        if(req.query?.email){
-            query = {email: req.query.email}
-        }
-        const cursor = bookingCollection.find(query)
-        const result = await cursor.toArray()
-        res.send(result)
+      let query = {}
+      if (req.query?.email) {
+        query = { email: req.query.email }
+      }
+      const cursor = bookingCollection.find(query)
+      const result = await cursor.toArray()
+      res.send(result)
     })
 
 
@@ -76,11 +93,11 @@ async function run() {
 
     // create
 
-    app.post('/bookings', async(req,res)=>{
-        const newBooking = req.body;
-        const result = await bookingCollection.insertOne(newBooking)
-        res.send(result)
-        
+    app.post('/bookings', async (req, res) => {
+      const newBooking = req.body;
+      const result = await bookingCollection.insertOne(newBooking)
+      res.send(result)
+
     })
 
 
@@ -102,10 +119,10 @@ run().catch(console.dir);
 
 
 
-app.get('/',(req,res)=>{
-    res.send("Hotel Booking server is running")
+app.get('/', (req, res) => {
+  res.send("Hotel Booking server is running")
 })
 
-app.listen(port,()=>{
-    console.log(`Hotel Booking server is running on PORT:${port} `)
+app.listen(port, () => {
+  console.log(`Hotel Booking server is running on PORT:${port} `)
 })
