@@ -31,6 +31,7 @@ async function run() {
 
     const roomCollection = client.db("roomDB").collection("rooms")
     const bookingCollection = client.db("roomDB").collection("bookings")
+    const reviewCollection = client.db("roomDB").collection("review")
 
     // read
     // room
@@ -98,6 +99,15 @@ async function run() {
       const result = await bookingCollection.insertOne(newBooking)
       res.send(result)
 
+    })
+
+
+    // for review
+
+    app.post('/review', async(req,res)=>{
+      const newReview = req.body;
+      const result = await reviewCollection.insertOne(newReview)
+      res.send(result)
     })
 
 
