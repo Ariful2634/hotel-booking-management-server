@@ -57,7 +57,7 @@ async function run() {
 
     app.post('/logout', async(req,res)=>{
       const user = req.body;
-      console.log('login out user', user)
+      console.log('logging out user', user)
       res.clearCookie('token', {maxAge:0})
       .send({success:true})
     })
