@@ -9,7 +9,10 @@ const port = process.env.PORT || 5000;
 // middleware
 
 app.use(cors({
-  origin:['http://localhost:5173'],
+  origin:['https://hotel-booking-management-928e5.web.app',
+  'https://hotel-booking-management-928e5.firebaseapp.com',
+  
+],
   credentials:true,
 }))
 app.use(express.json())
@@ -30,10 +33,27 @@ const client = new MongoClient(uri, {
   }
 });
 
+
+const verifyToken = (req,res,next)=>{
+  const token = req?.cookies?.token;
+  // console.log('token in the middleware', token)
+  // no token available
+  if(!token){
+      return res.status(401).send({message: 'unauthorized access'})
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded)=>{
+      if(err){
+          res.status(401).send({message: 'unauthorized access'})
+      }
+      req.user=decoded;
+      next()
+  })
+}
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const roomCollection = client.db("roomDB").collection("rooms")
     const bookingCollection = client.db("roomDB").collection("bookings")
@@ -110,7 +130,7 @@ async function run() {
 
     // read
 
-    app.get('/bookings', async (req, res) => {
+    app.get('/bookings',  async (req, res) => {
 
       let query = {}
       if (req.query?.email) {
