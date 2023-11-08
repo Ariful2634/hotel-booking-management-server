@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 5000;
@@ -12,6 +13,7 @@ app.use(cors({
   credentials:true,
 }))
 app.use(express.json())
+app.use(cookieParser())
 
 
 
@@ -51,6 +53,13 @@ async function run() {
       })
       .send({success:true})
 
+    })
+
+    app.post('/logout', async(req,res)=>{
+      const user = req.body;
+      console.log('login out user', user)
+      res.clearCookie('token', {maxAge:0})
+      .send({success:true})
     })
 
 
