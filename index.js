@@ -12,6 +12,7 @@ app.use(cors({
   origin:['https://hotel-booking-management-928e5.web.app',
   'https://hotel-booking-management-928e5.firebaseapp.com',
   
+  
 ],
   credentials:true,
 }))
@@ -69,7 +70,8 @@ async function run() {
       .cookie('token', token,{
         httpOnly:true,
         secure:true,
-        sameSite:'none'
+        sameSite:'none',
+        maxAge: 60 * 60 *1000
       })
       .send({success:true})
 
@@ -78,7 +80,7 @@ async function run() {
     app.post('/logout', async(req,res)=>{
       const user = req.body;
       console.log('logging out user', user)
-      res.clearCookie('token', {maxAge:0})
+      res.clearCookie('token', {maxAge:0, secure:true, sameSite:'none'})
       .send({success:true})
     })
 
@@ -130,7 +132,7 @@ async function run() {
 
     // read
 
-    app.get('/bookings',  async (req, res) => {
+    app.get('/bookings', async (req, res) => {
 
       let query = {}
       if (req.query?.email) {
